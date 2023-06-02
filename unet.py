@@ -1,8 +1,6 @@
 """Unet implementation in PyTorch."""
-
 import torch
 import torch.nn as nn
-from typing_extensions import override
 
 
 def double_conv(in_channels: int, out_channels: int) -> nn.Module:
@@ -38,7 +36,6 @@ class DownSampleBlock(nn.Module):
         self.conv_block = double_conv(in_channels, out_channels)
         self.maxpool = nn.MaxPool2d((2,2))
 
-    @override
     def forward(self, x: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
         """Forward downsample."""
         x_skip = self.conv_block.forward(x)
@@ -54,7 +51,6 @@ class UpSampleBlock(nn.Module):
         self.conv_block = double_conv(in_channels, out_channels)
         self.upsample = nn.Upsample(scale_factor=(2,2), mode="bilinear", align_corners=True)
 
-    @override
     def forward(self, x: torch.Tensor, x_skip: torch.Tensor) -> torch.Tensor:
         x = self.upsample(x)
         x = torch.cat([x, x_skip], dim=1) # concatenates x and x_skip
@@ -79,7 +75,6 @@ class UNet(nn.Module):
         self.upsample_block_1 = UpSampleBlock(64+32, 32)
         self.last_conv = nn.Conv2d(32, 3, 1)
 
-    @override
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x, x_skip1 = self.downsample_block_1.forward(x)
         x, x_skip2 = self.downsample_block_2.forward(x)
@@ -95,7 +90,6 @@ class UNet(nn.Module):
 
         return out
 
-    @override
     def get_features(self, x: torch.Tensor) -> torch.Tensor:
         x, _ = self.downsample_block_1(x)
         x, _ = self.downsample_block_2(x)
