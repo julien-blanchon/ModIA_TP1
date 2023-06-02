@@ -3,11 +3,16 @@
 {
 	"name": "Python 3",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/python:0-3.11",
+	// "image": "mcr.microsoft.com/devcontainers/python:0-3.10",
+	"build": {
+        // Path is relataive to the devcontainer.json file.
+		"context": "..",
+        "dockerfile": "Dockerfile"
+    },
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {
-		"ghcr.io/devcontainers/features/git:1": {"version": "os-provided"}
+		"ghcr.io/devcontainers/features/git:1": {"version": "os-provided"},
 	},
 
     // The arguments required when starting in the container.
@@ -20,10 +25,38 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "pip3 install --user -r requirements.txt"
+	// "postCreateCommand": "pip3 install --user -r ./requirements.txt",
 
 	// Configure tool-specific properties.
-	// "customizations": {},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"ms-toolsai.jupyter",
+				"charliermarsh.ruff",
+				"esbenp.prettier-vscode",
+			]
+		},
+		"settings": {
+			"telemetry.telemetryLevel": "off",
+			"[python]": {
+				"diffEditor.wordWrap": "off",
+				"editor.defaultFormatter": "ms-python.python",
+				// "editor.defaultFormatter": null,
+				"editor.formatOnSave": true,
+				"editor.formatOnSaveMode": "file",
+				"editor.codeActionsOnSave": {
+				  "source.organizeImports": false,
+				  "source.fixAll": true
+				}
+			  },
+			"ruff.organizeImports": true,
+		},
+		"[markdown]": {
+			"editor.defaultFormatter": "esbenp.prettier-vscode"
+		},
+	}
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"
