@@ -1,4 +1,5 @@
 torch
 torchvision
 torchaudio
+tensorboard
 gradio
