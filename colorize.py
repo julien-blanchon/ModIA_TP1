@@ -77,7 +77,7 @@ if __name__=="__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--exp_name", type=str, default = "Colorize", help="experiment name")
     parser.add_argument("--data_path", type=str, default = "./data/landscapes", help="path to dataset")
-    parser.add_argument("--batch_size", type=int, default = 16, help="batch size")
+    parser.add_argument("--batch_size", type=int, default = 32, help="batch size")
     parser.add_argument("--epochs", type=int, default = 5, help="number of epochs")
     parser.add_argument("--lr", type=float, default = 0.001, help="learning rate")
 
@@ -92,14 +92,14 @@ if __name__=="__main__":
         path=data_path,
         batch_size=batch_size,
         shuffle=True,
-        num_workers=0
+        num_workers=6
     )
 
 
     optimizer = optim.Adam(unet.parameters(), lr=lr)
     writer = SummaryWriter(f"runs/{exp_name}")
     train(unet, optimizer, loader, epochs=epochs, writer=writer)
-    writer.add_graph(unet)
+    # writer.add_graph(unet, input_to_model=next(iter(loader))[0].to(device))
 
     # Save model weights
     torch.save(unet.state_dict(), "unet.pth")
